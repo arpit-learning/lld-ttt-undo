@@ -16,7 +16,6 @@ public class Game {
     private Player winner;
     private int nextPlayerMoveIndex;
     private List<Move> moves;
-
     private WinningStrategy winningStrategy;
 
     Game(int dimension, List<Player> players) {
@@ -162,5 +161,27 @@ public class Game {
 
     public void undo() throws EmptyMovesException {
         //Implement Undo functionality.
+        if(this.moves.isEmpty()) {
+            throw new EmptyMovesException("Undo operation can't be performed as the moves list is empty");
+        }
+
+        int len = this.moves.size();
+        Move lastMove = this.moves.get(this.moves.size() - 1);
+
+        Cell cell = lastMove.getCell();
+        int row = cell.getRow();
+        int col = cell.getCol();
+
+        this.board.getBoard().get(row).get(col).setCellState(CellState.EMPTY);
+
+        this.moves.remove(len - 1);
+    }
+
+    public WinningStrategy getWinningStrategy() {
+        return winningStrategy;
+    }
+
+    public void setWinningStrategy(WinningStrategy winningStrategy) {
+        this.winningStrategy = winningStrategy;
     }
 }
